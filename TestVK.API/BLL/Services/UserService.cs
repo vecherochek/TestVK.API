@@ -11,11 +11,11 @@ public class UserService: IUserService
     private readonly UserGroupRepository _userGroupRepository;
     private readonly UserStateRepository _userStateRepository;
 
-    public UserService(UserRepository userRepository, UserGroupRepository userGroupRepository, UserStateRepository userStatepRepository)
+    public UserService(UserRepository userRepository, UserGroupRepository userGroupRepository, UserStateRepository userStateRepository)
     {
         _userRepository = userRepository;
         _userGroupRepository = userGroupRepository;
-        _userStateRepository = userStatepRepository;
+        _userStateRepository = userStateRepository;
     }
 
     public async Task<User> GetUserAsync(Guid id)
@@ -29,8 +29,22 @@ public class UserService: IUserService
     
     public async Task<List<MyPage>> GetAllUsersAsync()
     {
-        var users = await _userRepository.GetUsersAsync();
         var pageSize = 10;
+        
+        var users = await _userRepository.GetUsersAsync();
+        if (!users.Any())
+        {
+            var page = new MyPage
+            {
+                PageNumber = 1,
+                PageSize = pageSize,
+                TotalUsers = 0,
+                TotalPages = 1,
+                Data = null
+            };
+            return new List<MyPage>(){page};
+        }
+        
         var totalUsers = users.Count();
         var totalPages = totalUsers / pageSize + 1;
 
