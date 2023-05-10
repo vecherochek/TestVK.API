@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestVK.API.BLL.Services;
+using TestVK.API.BLL.Services.Interfaces;
 using TestVK.API.Requests;
 using TestVK.API.Responses;
 
@@ -12,9 +13,9 @@ namespace TestVK.API.Controllers;
 [Route("[controller]")]
 public class UserController: ControllerBase
 {
-    private readonly UserService _userService;
+    private readonly IUserService _userService;
 
-    public UserController(UserService userService)
+    public UserController(IUserService userService)
     {
         _userService = userService;
     }

@@ -45,7 +45,7 @@ public class UserRepository : Repository<User>, IUserRepository
         await DbContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<User>> GetUsersAsync()
+    public async Task<IEnumerable<User>?> GetUsersAsync()
     {
         return await Users.ToListAsync();
     }
