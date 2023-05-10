@@ -58,16 +58,21 @@ public class UserService: IUserService
         if (state is null)
             throw new InvalidOperationException("Such state does not exist");
         
-        //TODO: если не сущетсвует активного админа то можно добавить нового 
+        //TODO: добавить кейс, когда не сущетсвует активного админа, то можно добавить нового 
         if (userGroupCode == "Admin")
-            throw new InvalidOperationException("Admin already exists. More than one admin is not allowed");
+        {
+            var admin = _userRepository.GetUserByGroup(group.Id);
+            
+            if (admin is not null)
+                throw new InvalidOperationException("Admin already exists. More than one admin is not allowed");
+        }
         
         var user = new User
         {
             Id = Guid.NewGuid(),
             Login = login,
             Password = password,
-            CreatedDate = DateTime.Now,
+            CreatedDate = DateTime.UtcNow,
             UserGroupId = group.Id,
             UserStateId = state.Id
         };
