@@ -1,4 +1,4 @@
-﻿using TestVK.API.BLL.Structs;
+﻿using TestVK.API.BLL.Helpers;
 
 namespace TestVK.API.Responses;
 
