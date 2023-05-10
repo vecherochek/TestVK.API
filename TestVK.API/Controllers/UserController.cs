@@ -6,7 +6,7 @@ using TestVK.API.Responses;
 
 namespace TestVK.API.Controllers;
 
-[Authorize]
+/*[Authorize]*/
 [ApiController]
 [Route("[controller]")]
 public class UserController: ControllerBase
@@ -19,9 +19,9 @@ public class UserController: ControllerBase
     }
     
     [HttpGet("{userId}")]
-    public GetUserResponse Get(GetUserRequest request)
+    public GetUserResponse Get(Guid userId)
     {
-        var user = _userService.GetUser(request.userId);
+        var user = _userService.GetUser(userId);
         return new GetUserResponse(user);
     }
     
@@ -38,7 +38,7 @@ public class UserController: ControllerBase
         _userService.DeleteUser(request.userId);
     }
     
-    [HttpPut("add")]
+    [HttpPost("add")]
     public void AddUser(AddUserRequest request)
     {
         _userService.CreateNewUser(request.login, request.password, request.userGroupCode);
