@@ -4,6 +4,18 @@ networks:
   testwork:
     
 services:
+  postgres_user:
+    hostname: postgres
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "qwerty"
+    networks:
+      - testwork
+    
   test_api:
     build: ./
     ports:
@@ -12,20 +24,7 @@ services:
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "qwerty"
-      POSTGRES_DB: "UserInfoDb"
     depends_on:
       - postgres_user
-    networks:
-      - testwork
-  
-  postgres_user:
-    image: postgres:latest
-    ports:
-      - "5432:5432"
-    restart: always
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "qwerty"
-      POSTGRES_DB: "UserInfoDb"
     networks:
       - testwork
