@@ -5,14 +5,12 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["TestVK.API/TestVK.API.csproj", "TestVK.API/"]
-RUN dotnet restore "TestVK.API/TestVK.API.csproj"
 COPY . .
-WORKDIR "/src/TestVK.API"
-RUN dotnet build "TestVK.API.csproj" -c Release -o /app/build
+RUN dotnet restore
+RUN dotnet build
 
 FROM build AS publish
-RUN dotnet publish "TestVK.API.csproj" -c Release -o /app/publish
+RUN dotnet publish -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
