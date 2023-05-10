@@ -10,6 +10,10 @@ public class UserStateRepository: Repository<UserState>, IUserStateRepository
     private UserInfoDbContext DbContext { get; set; }
 
     public DbSet<UserState> UserStates => DbContext.UserStates;
+    public UserStateRepository(UserInfoDbContext dbContext)
+    {
+        DbContext = dbContext;
+    }
     public override UserState? Get(Guid id)
     {
         return UserStates

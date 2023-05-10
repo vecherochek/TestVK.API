@@ -9,7 +9,10 @@ public class UserGroupRepository : Repository<UserGroup>, IUserGroupRepository
 {
     private UserInfoDbContext DbContext { get; set; }
     public DbSet<UserGroup> UserGroups => DbContext.UserGroups;
-
+    public UserGroupRepository(UserInfoDbContext dbContext)
+    {
+        DbContext = dbContext;
+    }
     public override UserGroup? Get(Guid id)
     {
         return UserGroups
