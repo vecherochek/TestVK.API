@@ -1,7 +1,7 @@
-﻿using TestVK.API.BLL.Models;
+﻿using TestVK.API.BLL.Helpers;
+using TestVK.API.BLL.Models;
 using TestVK.API.BLL.Services.Interfaces;
 using TestVK.API.DAL.Repositories;
-using TestVK.API.BLL.Structs;
 
 namespace TestVK.API.BLL.Services;
 
@@ -18,19 +18,21 @@ public class UserService: IUserService
         _userStateRepository = userStatepRepository;
     }
 
-    public User GetUser(Guid id)
+    public async Task<User> GetUserAsync(Guid id)
     {
-        var user = _userRepository.Get(id);
+        var user = await _userRepository.GetAsync(id);
         if (user is null)
             throw new InvalidOperationException("User with this id does not exist");
         
         return user;
     }
     
-    public List<MyPage> GetAllUsers()
+    public async Task<List<MyPage>> GetAllUsersAsync()
     {
-        var users = _userRepository.GetUsers();
-        int pageSize = 10;
+        var users = await _userRepository.GetUsersAsync();
+        var pageSize = 10;
+        var totalUsers = users.Count();
+        var totalPages = totalUsers / pageSize + 1;
 
         var pages = users.Select((item, index) => new { Item = item, Index = index })
             .GroupBy(x => x.Index / pageSize)
@@ -38,7 +40,8 @@ public class UserService: IUserService
             {
                 PageNumber = g.Key + 1,
                 PageSize = pageSize,
-                Total = users.Count(),
+                TotalUsers = totalUsers,
+                TotalPages = totalPages,
                 Data = g.Select(x => x.Item).ToList()
             })
             .ToList();
@@ -46,10 +49,10 @@ public class UserService: IUserService
         return pages;
     }
 
-    public void DeleteUser(Guid id)
+    public async Task DeleteUserAsync(Guid id)
     {
-        var user = GetUser(id);
-        var state = _userStateRepository.GetUserStateByCode("Blocked");
+        var user = await GetUserAsync(id);
+        var state = await _userStateRepository.GetUserStateByCodeAsync("Blocked");
         
         if (state is not null)
         {
@@ -57,16 +60,16 @@ public class UserService: IUserService
         }
         
         _userRepository.Update(user);
-        _userRepository.Save();
+        await _userRepository.SaveAsync();
     }
 
-    public void CreateNewUser(string login, byte[] password, string userGroupCode)
+    public async Task CreateNewUserAsync(string login, byte[] password, string userGroupCode)
     {
-        if (_userRepository.GetUserByLogin(login) is not null)
+        if (await _userRepository.GetUserByLoginAsync(login) is not null)
             throw new InvalidOperationException("User with this login already exists");
         
-        var state = _userStateRepository.GetUserStateByCode("Active");
-        var group = _userGroupRepository.GetUserGroupByCode(userGroupCode);
+        var state = await _userStateRepository.GetUserStateByCodeAsync("Active");
+        var group = await _userGroupRepository.GetUserGroupByCodeAsync(userGroupCode);
         
         if (group is null)
             throw new InvalidOperationException("Such group does not exist");
@@ -76,7 +79,7 @@ public class UserService: IUserService
         //TODO: добавить кейс, когда не сущетсвует активного админа, то можно добавить нового 
         if (userGroupCode == "Admin")
         {
-            var admin = _userRepository.GetUserByGroup(group.Id);
+            var admin = _userRepository.GetUserByGroupAsync(group.Id);
             
             if (admin is not null)
                 throw new InvalidOperationException("Admin already exists. More than one admin is not allowed");
@@ -92,7 +95,7 @@ public class UserService: IUserService
             UserStateId = state.Id
         };
         
-        _userRepository.Create(user);
-        _userRepository.Save();
+        await _userRepository.CreateAsync(user);
+        await _userRepository.SaveAsync();
     }
 }
