@@ -1,6 +1,7 @@
 ﻿using TestVK.API.BLL.Models;
 using TestVK.API.BLL.Services.Interfaces;
 using TestVK.API.DAL.Repositories;
+using TestVK.API.BLL.Structs;
 
 namespace TestVK.API.BLL.Services;
 
@@ -25,10 +26,24 @@ public class UserService: IUserService
         
         return user;
     }
-
-    public IEnumerable<User> GetAllUsers()
+    
+    public List<MyPage> GetAllUsers()
     {
-        return _userRepository.GetUsers();
+        var users = _userRepository.GetUsers();
+        int pageSize = 10;
+
+        var pages = users.Select((item, index) => new { Item = item, Index = index })
+            .GroupBy(x => x.Index / pageSize)
+            .Select(g => new MyPage
+            {
+                PageNumber = g.Key + 1,
+                PageSize = pageSize,
+                Total = users.Count(),
+                Data = g.Select(x => x.Item).ToList()
+            })
+            .ToList();
+        
+        return pages;
     }
 
     public void DeleteUser(Guid id)

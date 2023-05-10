@@ -1,5 +1,5 @@
-﻿using TestVK.API.BLL.Models;
+﻿using TestVK.API.BLL.Structs;
 
 namespace TestVK.API.Responses;
 
-public record GetAllUsersResponse(IEnumerable<User> Users);
+public record GetAllUsersResponse(List<MyPage> Pages);

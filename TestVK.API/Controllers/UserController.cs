@@ -7,7 +7,7 @@ using TestVK.API.Responses;
 
 namespace TestVK.API.Controllers;
 
-/*[Authorize]*/
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class UserController: ControllerBase
