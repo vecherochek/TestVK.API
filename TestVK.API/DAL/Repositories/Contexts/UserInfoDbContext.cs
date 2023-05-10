@@ -33,6 +33,9 @@ public class UserInfoDbContext : DbContext
             options.HasKey(x => x.Id);
             options.HasMany<User>()
                 .WithOne();
+            options.HasData(
+                new UserGroup { Id = Guid.NewGuid(), Code = "Admin", Description = "Admin" },
+                new UserGroup { Id = Guid.NewGuid(), Code = "User", Description = "User" });
         });
 
         builder.Entity<UserState>(options =>
@@ -40,6 +43,9 @@ public class UserInfoDbContext : DbContext
             options.HasKey(x => x.Id);
             options.HasMany<User>()
                 .WithOne();
+            options.HasData(
+                new UserState { Id = Guid.NewGuid(), Code = "Active", Description = "User exists" },
+                new UserState { Id = Guid.NewGuid(), Code = "Blocked", Description = "User does not exist" });
         });
     }
 }
