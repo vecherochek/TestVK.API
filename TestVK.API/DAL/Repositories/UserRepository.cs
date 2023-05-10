@@ -9,7 +9,11 @@ public class UserRepository: Repository<User>, IUserRepository
 {
     private UserInfoDbContext DbContext { get; set; }
 
-    public DbSet<User> Users => DbContext.Users;
+    private DbSet<User> Users => DbContext.Users;
+    public UserRepository(UserInfoDbContext dbContext)
+    {
+        DbContext = dbContext;
+    }
     public override User? Get(Guid id)
     {
         return Users
