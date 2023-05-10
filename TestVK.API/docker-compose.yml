@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  tic-tac-toe_api:
+    build: ./
+    ports:
+      - "8000:80"
+      - "8001:443"
+    environment:
+      - DB_CONNECTION_STRING = "Server=192.168.1.186;Port=5432;Database=postgres;Username=postgres;Password=qwerty"
+    depends_on:
+      - postgres_image
+  
+  postgres_image:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "qwerty"
