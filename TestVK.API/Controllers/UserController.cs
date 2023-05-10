@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TestVK.API.BLL.Services;
 using TestVK.API.Requests;
@@ -32,15 +33,15 @@ public class UserController: ControllerBase
             _userService.GetAllUsers());
     }
     
-    [HttpDelete("{userId}")]
+    [HttpDelete]
     public void DeleteUser(DeleteUserRequest request)
     {
         _userService.DeleteUser(request.userId);
     }
     
-    [HttpPost("add")]
+    [HttpPost("add-new-user")]
     public void AddUser(AddUserRequest request)
     {
-        _userService.CreateNewUser(request.login, request.password, request.userGroupCode);
+        _userService.CreateNewUser(request.login, Encoding.ASCII.GetBytes(request.password), request.userGroupCode);
     }
 }

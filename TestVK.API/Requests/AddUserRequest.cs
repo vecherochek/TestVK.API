@@ -1,3 +1,3 @@
 ﻿namespace TestVK.API.Requests;
 
-public record AddUserRequest(string login, byte[] password, string userGroupCode);
+public record AddUserRequest(string login, string password, string userGroupCode);
