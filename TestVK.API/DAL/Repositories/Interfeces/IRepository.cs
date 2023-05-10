@@ -1,12 +1,14 @@
-﻿namespace TestVK.API.DAL.Repositories.Interfeces;
+﻿using TestVK.API.BLL.Models;
+
+namespace TestVK.API.DAL.Repositories.Interfeces;
 
 public interface IRepository<T>
     : IDisposable
     where T : class
 {
-    T Get(Guid id);
-    void Create(T item);
+    Task<T?> GetAsync(Guid id);
+    Task CreateAsync(T item);
     void Update(T item);
-    void Delete(Guid id);
-    void Save();
+    Task DeleteAsync(Guid id);
+    Task SaveAsync();
 }

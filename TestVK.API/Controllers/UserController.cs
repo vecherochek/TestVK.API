@@ -20,28 +20,28 @@ public class UserController: ControllerBase
     }
     
     [HttpGet("{userId}")]
-    public GetUserResponse Get(Guid userId)
+    public async Task<GetUserResponse> GetAsync(Guid userId)
     {
-        var user = _userService.GetUser(userId);
+        var user = await _userService.GetUserAsync(userId);
         return new GetUserResponse(user);
     }
     
     [HttpGet("all-players-list")]
-    public GetAllUsersResponse Get()
+    public async Task<GetAllUsersResponse> GetAsync()
     {
         return new GetAllUsersResponse(
-            _userService.GetAllUsers());
+            await _userService.GetAllUsersAsync());
     }
     
     [HttpDelete]
-    public void DeleteUser(DeleteUserRequest request)
+    public async Task DeleteUserAsync(DeleteUserRequest request)
     {
-        _userService.DeleteUser(request.userId);
+        await _userService.DeleteUserAsync(request.userId);
     }
     
     [HttpPost("add-new-user")]
-    public void AddUser(AddUserRequest request)
+    public async Task AddUserAsync(AddUserRequest request)
     {
-        _userService.CreateNewUser(request.login, Encoding.ASCII.GetBytes(request.password), request.userGroupCode);
+        await _userService.CreateNewUserAsync(request.login, Encoding.ASCII.GetBytes(request.password), request.userGroupCode);
     }
 }

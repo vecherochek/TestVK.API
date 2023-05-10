@@ -4,6 +4,6 @@ namespace TestVK.API.DAL.Repositories.Interfeces;
 
 public interface IUserGroupRepository: IRepository<UserGroup>
 {
-    UserGroup GetUserGroupByCode(string code);
+    Task<UserGroup> GetUserGroupByCodeAsync(string code);
 
 }

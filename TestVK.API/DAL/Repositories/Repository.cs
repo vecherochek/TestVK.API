@@ -1,4 +1,5 @@
-﻿using TestVK.API.DAL.Repositories.Interfeces;
+﻿using TestVK.API.BLL.Models;
+using TestVK.API.DAL.Repositories.Interfeces;
 
 namespace TestVK.API.DAL.Repositories;
 
@@ -7,11 +8,11 @@ public abstract class Repository<T> : IRepository<T>
 {
     protected bool Disposed = false;
 
-    public abstract T Get(Guid id);
-    public abstract void Create(T item);
+    public abstract Task<T> GetAsync(Guid id);
+    public abstract Task CreateAsync(T item);
     public abstract void Update(T item);
-    public abstract void Delete(Guid id);
-    public abstract void Save();
+    public abstract Task DeleteAsync(Guid id);
+    public abstract Task SaveAsync();
 
     ~Repository()
     {

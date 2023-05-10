@@ -5,58 +5,61 @@ using TestVK.API.DAL.Repositories.Interfeces;
 
 namespace TestVK.API.DAL.Repositories;
 
-public class UserRepository: Repository<User>, IUserRepository
+public class UserRepository : Repository<User>, IUserRepository
 {
     private UserInfoDbContext DbContext { get; set; }
 
     private DbSet<User> Users => DbContext.Users;
+
     public UserRepository(UserInfoDbContext dbContext)
     {
         DbContext = dbContext;
     }
-    public override User? Get(Guid id)
+
+    public override async Task<User?> GetAsync(Guid id)
     {
-        return Users
-            .FirstOrDefault(user => user.Id == id);
+        return await Users
+            .FirstOrDefaultAsync(user => user.Id == id);
     }
 
-    public override void Create(User item)
+    public override async Task CreateAsync(User item)
     {
-        Users.Add(item);
+        await Users.AddAsync(item);
     }
 
     public override void Update(User item)
     {
         Users.Update(item);
     }
+    
 
-    public override void Delete(Guid id)
+    public override async Task DeleteAsync(Guid id)
     {
-        var user = Get(id);
+        var user = await GetAsync(id);
         if (user != null)
             Users.Remove(user);
     }
 
-    public override void Save()
+    public override async Task SaveAsync()
     {
-        DbContext.SaveChanges();
+        await DbContext.SaveChangesAsync();
     }
 
-    public IEnumerable<User> GetUsers()
+    public async Task<IEnumerable<User>> GetUsersAsync()
     {
-        return Users.ToList();
+        return await Users.ToListAsync();
     }
 
-    public User? GetUserByLogin(string login)
+    public async Task<User?> GetUserByLoginAsync(string login)
     {
-        return Users
-            .FirstOrDefault(user => user.Login == login);
+        return await Users
+            .FirstOrDefaultAsync(user => user.Login == login);
     }
 
-    public User? GetUserByGroup(Guid groupId)
+    public async Task<User?> GetUserByGroupAsync(Guid groupId)
     {
-        return Users
-            .FirstOrDefault(user => user.UserGroupId == groupId);
+        return await Users
+            .FirstOrDefaultAsync(user => user.UserGroupId == groupId);
     }
 
     protected override void Dispose(bool dispose)

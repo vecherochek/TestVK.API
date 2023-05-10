@@ -1,12 +1,12 @@
-﻿using TestVK.API.BLL.Models;
-using TestVK.API.BLL.Structs;
+﻿using TestVK.API.BLL.Helpers;
+using TestVK.API.BLL.Models;
 
 namespace TestVK.API.BLL.Services.Interfaces;
 
 public interface IUserService
 {
-    User GetUser(Guid id);
-    List<MyPage> GetAllUsers();
-    void DeleteUser(Guid id);
-    void CreateNewUser(string login, byte[] password, string userGroupCode);
+    Task<User> GetUserAsync(Guid id);
+    Task<List<MyPage>> GetAllUsersAsync();
+    Task DeleteUserAsync(Guid id);
+    Task CreateNewUserAsync(string login, byte[] password, string userGroupCode);
 }

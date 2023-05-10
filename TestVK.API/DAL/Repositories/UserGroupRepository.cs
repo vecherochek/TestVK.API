@@ -8,20 +8,20 @@ namespace TestVK.API.DAL.Repositories;
 public class UserGroupRepository : Repository<UserGroup>, IUserGroupRepository
 {
     private UserInfoDbContext DbContext { get; set; }
-    public DbSet<UserGroup> UserGroups => DbContext.UserGroups;
+    private DbSet<UserGroup> UserGroups => DbContext.UserGroups;
     public UserGroupRepository(UserInfoDbContext dbContext)
     {
         DbContext = dbContext;
     }
-    public override UserGroup? Get(Guid id)
+    public override async Task<UserGroup?> GetAsync(Guid id)
     {
-        return UserGroups
-            .FirstOrDefault(userGroup => userGroup.Id == id);
+        return await UserGroups
+            .FirstOrDefaultAsync(userGroup => userGroup.Id == id);
     }
 
-    public override void Create(UserGroup item)
+    public override async Task CreateAsync(UserGroup item)
     {
-        UserGroups.Add(item);
+        await UserGroups.AddAsync(item);
     }
 
     public override void Update(UserGroup item)
@@ -29,22 +29,22 @@ public class UserGroupRepository : Repository<UserGroup>, IUserGroupRepository
         UserGroups.Update(item);
     }
 
-    public override void Delete(Guid id)
+    public override async Task DeleteAsync(Guid id)
     {
-        var userGroup = Get(id);
+        var userGroup = await GetAsync(id);
         if (userGroup != null)
             UserGroups.Remove(userGroup);
     }
 
-    public override void Save()
+    public override async Task SaveAsync()
     {
-        DbContext.SaveChanges();
+        await DbContext.SaveChangesAsync();
     }
 
-    public UserGroup? GetUserGroupByCode(string code)
+    public async Task<UserGroup?> GetUserGroupByCodeAsync(string code)
     {
-        return UserGroups
-            .FirstOrDefault(userGroup => userGroup.Code == code);
+        return await UserGroups
+            .FirstOrDefaultAsync(userGroup => userGroup.Code == code);
     }
 
     protected override void Dispose(bool dispose)

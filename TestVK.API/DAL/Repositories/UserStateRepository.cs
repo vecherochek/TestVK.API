@@ -9,20 +9,20 @@ public class UserStateRepository: Repository<UserState>, IUserStateRepository
 {
     private UserInfoDbContext DbContext { get; set; }
 
-    public DbSet<UserState> UserStates => DbContext.UserStates;
+    private DbSet<UserState> UserStates => DbContext.UserStates;
     public UserStateRepository(UserInfoDbContext dbContext)
     {
         DbContext = dbContext;
     }
-    public override UserState? Get(Guid id)
+    public override async Task<UserState?> GetAsync(Guid id)
     {
-        return UserStates
-            .FirstOrDefault(userState => userState.Id == id);
+        return await UserStates
+            .FirstOrDefaultAsync(userState => userState.Id == id);
     }
 
-    public override void Create(UserState item)
+    public override async Task CreateAsync(UserState item)
     {
-        UserStates.Add(item);
+        await UserStates.AddAsync(item);
     }
 
     public override void Update(UserState item)
@@ -30,22 +30,22 @@ public class UserStateRepository: Repository<UserState>, IUserStateRepository
         UserStates.Update(item);
     }
 
-    public override void Delete(Guid id)
+    public override async Task DeleteAsync(Guid id)
     {
-        var userState = Get(id);
+        var userState = await GetAsync(id);
         if (userState != null)
             UserStates.Remove(userState);
     }
 
-    public override void Save()
+    public override async Task SaveAsync()
     {
-        DbContext.SaveChanges();
+        await DbContext.SaveChangesAsync();
     }
 
-    public UserState? GetUserStateByCode(string code)
+    public async Task<UserState?> GetUserStateByCodeAsync(string code)
     {
-        return UserStates
-            .FirstOrDefault(userState => userState.Code == code);
+        return await UserStates
+            .FirstOrDefaultAsync(userState => userState.Code == code);
     }
 
     protected override void Dispose(bool dispose)
